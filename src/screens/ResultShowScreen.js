@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, FlatList, Image } from 'react-native';
 import yelp from '../api/yelp';
+import { SliderBox } from "react-native-image-slider-box";
 
 const ResultShowScreen = ({ navigation }) => {
     const [result, setResult] = useState(null)
@@ -18,19 +19,21 @@ const ResultShowScreen = ({ navigation }) => {
     return (
         <View>
             <Text>{result.name}</Text>
-            <FlatList
+
+            <SliderBox images={result.photos} autoplay circleLoop />
+            {/* <FlatList
                 data={result.photos}
                 keyExtractor={photo => photo}
                 renderItem={({ item }) => {
                     return <Image style={styles.image} source={{ uri: item }} />
-                }} />
+                }} /> */}
         </View>
     );
 };
 const styles = StyleSheet.create({
-    image:{
-        width:200,
-        height:300
+    image: {
+        width: 200,
+        height: 300
     }
 });
 export default ResultShowScreen;
