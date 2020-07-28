@@ -17,15 +17,11 @@ const ResultShowScreen = ({ navigation }) => {
         const response = await yelp.get(`/${id}`);
         setResult(response.data);
         setLoading(false);
-        console.log("after " + isLoading);
     };
     useEffect(() => {
         setLoading(true);
         getResult(id);
     }, []);
-    // if (!result) {
-    //     return null;
-    // }
     const dialCall = (number) => {
         let phoneNumber = '';
         if (Platform.OS === 'android') { phoneNumber = `tel:${number}`; }
@@ -38,11 +34,14 @@ const ResultShowScreen = ({ navigation }) => {
         else { link = `maps:${latLng}`; }
         Linking.openURL(link);
     };
+    const showCategories = () => {
+        return result.categories.map((item, index) => <Text key={index} >{item.title}, </Text>);
+    }
     return (
         <View style={{ flex: 1 }}>
-            {isLoading ? 
-            <ActivityIndicator size="large" color={"#bc2b78"} style={styles.loading} />
-            : null}
+            {isLoading ?
+                <ActivityIndicator size="large" color={"#bc2b78"} style={styles.loading} />
+                : null}
             {result ? <View>
                 <SliderBox images={result.photos} autoplay circleLoop />
                 <View style={{ padding: 10 }}>
@@ -50,6 +49,16 @@ const ResultShowScreen = ({ navigation }) => {
                     <View style={styles.row}>
                         <Text style={styles.title}>{result.name}</Text>
                         <Text style={{ flex: 1, }}>{result.review_count} Reviews</Text>
+                    </View>
+                    <View style={styles.row}>
+
+                        <Feather name="tag" style={{ padding: 2 }} />
+                        <Text style={{ flex: 1 }}>
+                            {showCategories()}</Text>
+
+                        <Feather name="clock" style={{ padding: 2 }} />
+                        {result.is_closed ? <Text>Closed</Text> :
+                            <Text>Open</Text>}
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.address}>{result.location.address1 + "\n" + result.location.city + "," + result.location.country}</Text>
